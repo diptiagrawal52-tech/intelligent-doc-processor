@@ -1,3 +1,8 @@
+"""
+Intelligent Document Processor Backend.
+All external API connections (e.g. Gemini API) securely read their credentials 
+exclusively from the system environment variables (GEMINI_API_KEY).
+"""
 import os
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException
