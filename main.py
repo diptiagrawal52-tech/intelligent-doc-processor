@@ -1,12 +1,29 @@
 import os
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel, Field
 from google import genai
 from google.genai import types
 from google.genai import errors
 
-app = FastAPI()
+app = FastAPI(
+    title="Intelligent Document Processor",
+    version="1.0.0",
+    openapi_url="/openapi.json",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# Enable CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Pydantic models for structured output schema
 class LineItem(BaseModel):
@@ -87,3 +104,14 @@ async def extract_document(request: ExtractRequest):
             status_code=500,
             detail=f"An error occurred during extraction: {str(e)}"
         )
+
+@app.get("/openapi.json", include_in_schema=False)
+async def custom_openapi():
+    """
+    Explicit fallback route to serve the OpenAPI JSON schema.
+    """
+    return get_openapi(
+        title="Intelligent Document Processor",
+        version="1.0.0",
+        routes=app.routes
+    )
