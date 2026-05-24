@@ -6,11 +6,7 @@ from google import genai
 from google.genai import types
 from google.genai import errors
 
-app = FastAPI(
-    title="Intelligent Document Processor",
-    description="FastAPI backend to parse unformatted documents into structured JSON using Gemini 2.5 Flash.",
-    version="1.0.0"
-)
+app = FastAPI()
 
 # Pydantic models for structured output schema
 class LineItem(BaseModel):
